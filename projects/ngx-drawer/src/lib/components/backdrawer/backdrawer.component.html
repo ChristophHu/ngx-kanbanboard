@@ -1,0 +1,19 @@
+<div class="absolute inset-0 flex flex-row min-w-0 mt-16 bg-primary dark:bg-primary dark:text-gray-100 overflow-y-auto" cdkScrollable>
+    <div class="block shrink transition-width transition-slowest duration-300 ease-in-out z-10" [ngClass]="open == true ? 'w-6' : 'w-80'">
+        <ng-content select="[slot=backdrawed]"></ng-content>
+    </div>
+    <div class="relative grow-0 text-grax-800 dark:text-gray-100 z-30">
+        <div class="absolute h-full w-10 -ml-6 bg-gradient-to-r from-transparent to-shadow" (click)="toggle()"></div>
+        <!-- <div class="absolute h-full w-10 -ml-6 bg-gradient-to-r from-transparent to-secondary" (click)="toggle()"></div> -->
+        <div class="h-full ml-4 border-l border-borderline"></div>
+        <button *ngIf="!open" class="absolute h-8 w-8 -mr-4 right-0 top-5 border border-borderline bg-secondary dark:bg-secondary rounded z-30 overflow-visible" (click)="toggle()">
+            <!-- <icons class="stroke-1 stroke-current" name="viewport-narrow"></icons> -->
+        </button>
+        <button *ngIf="open" class="absolute h-8 w-8 -mr-4 right-0 top-5 border border-borderline bg-secondary dark:bg-secondary rounded z-30 overflow-visible" (click)="toggle()">
+            <!-- <icons class="stroke-1 stroke-current" name="viewport-width"></icons> -->
+        </button>
+    </div>
+    <div class="relative grow bg-primary z-20">
+        <ng-content select="[slot=content]"></ng-content>
+    </div>
+</div>

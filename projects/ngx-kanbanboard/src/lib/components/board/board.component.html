@@ -1,0 +1,156 @@
+<div class="absolute inset-0 flex flex-col min-w-0 bg-primary" cdk-scrollable>
+
+    <div class="w-full p-5 pl-10">
+        <div class="flex flex-row justify-between items-center">
+            <div>
+                <h3 class="text-light text-4xl">Scrumboard</h3>
+                <span class="text-dark text-sm">12 Messages</span>
+            </div>
+            
+            <div class="flex">
+                <div class="flex items-center p-2 px-4 bg-accent text-light rounded-lg cursor-pointer">
+                    <div class="h-6 w-6">
+                        <!-- <icons class="stroke stroke-current" name="add"></icons> -->
+                    </div>
+                    <span class="px-2 text-sm">Add List</span>
+                </div>
+                <div class="h-10 w-10 ml-4 p-2 text-dark cursor-pointer">
+                    <!-- <icons class="stroke-2 stroke-current" name="dots-vertical"></icons> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <mat-drawer-container class="h-full w-full pl-10 bg-primary" (backdropClick)="close()">
+        <mat-drawer-content class="flex flex-col">
+            <!-- <div class="w-full p-5 pl-10">
+                <div class="flex flex-row justify-between items-center">
+                    <div>
+                        <h3 class="text-light text-4xl">Scrumboard</h3>
+                        <span class="text-dark text-sm">12 Messages</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="flex items-center p-2 px-4 bg-accent text-light rounded-lg cursor-pointer">
+                            <div class="h-6 w-6">
+                                <icons class="stroke stroke-current" name="add"></icons>
+                            </div>
+                            <span class="px-2 text-sm">Add List</span>
+                        </div>
+                        <div class="h-10 w-10 ml-4 p-2 text-dark cursor-pointer">
+                            <icons class="stroke-2 stroke-current" name="dots-vertical"></icons>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            
+            <div class="flex h-full scrollbar-hide" cdkDropList [cdkDropListData]="board.lists" [cdkDropListOrientation]="'horizontal'" (cdkDropListDropped)="listDropped($event)">
+                <div class="flex items-start" cdkDropListGroup>
+                    <ng-container *ngFor="let list of board.lists; trackBy: trackByFn">
+                        <div class="flex-0 h-full w-128 px-8 pb-8 bg-primary dark:bg-primary rounded-xl scrollbar-hide overflow-y-scroll" cdkDrag [cdkDragLockAxis]="'x'">
+                            <div class="sticky top-0 flex items-center justify-between bg-primary dark:bg-primary opacity-80 z-30" cdkDragHandle>
+
+                                <div class="h-full w-128 bg-gradient-45 to-secondary rounded-xl" *cdkDragPlaceholder></div>
+
+                                <div class="flex flex-col w-full items-start sm:items-center sm:flex-row my-4">
+                                    <div class="h-6 px-2 bg-dark text-primary font-bold rounded">
+                                        {{list.cards.length}}
+                                    </div>
+                                    <input class="w-96 pl-4 bg-transparent text-dark placeholder:text-dark font-medium focus:outline-none" placeholder="Title..." [value]="list.title" />
+                                    <div class="flex items-center pr-2 cursor-move">
+                                        <div class="h-6 w-6 text-dark">
+                                            <!-- <icons class="stroke-2 stroke-current" name="arrows-left-right"></icons> -->
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center pr-2 cursor-pointer" [matMenuTriggerFor]="listMenu">
+                                        <div class="h-6 w-6 text-dark">
+                                            <!-- <icons class="stroke-2 stroke-current" name="dots-vertical"></icons> -->
+                                        </div>
+                                        <mat-menu #listMenu="matMenu" xPosition="before" [overlapTrigger]="false" class="w-52 dark:bg-tertiary border border-borderline shadow-lg">
+                                            <div  class="flex flex-row h-12 px-4 items-center hover:bg-secondary cursor-pointer">
+                                                <div class="w-8 text-dark">
+                                                    <!-- <icons class="stroke-1 stroke-current" name="edit"></icons> -->
+                                                </div>
+                                                <div class="w-full ml-8 bg-transparent text-dark text-base font-normal">
+                                                    Edit
+                                                </div>
+                                            </div>
+                                            <div  class="flex flex-row h-12 px-4 items-center hover:bg-secondary cursor-pointer">
+                                                <div class="w-8 text-dark">
+                                                    <!-- <icons class="stroke-1 stroke-current" name="trash"></icons> -->
+                                                </div>
+                                                <div class="w-full ml-8 bg-transparent text-dark font-normal">
+                                                    Delete
+                                                </div>
+                                            </div>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                            </div>
+                            <div [id]="list.id" class="pb-0 mt-4 z-20" cdkDropList [cdkDropListData]="list.cards" (cdkDropListDropped)="cardDropped($event)">
+
+                                <ng-container *ngIf="!list.cards.length">
+                                    <div class="relative flex flex-col items-start mb-4 p-4 bg-tertiary dark:bg-tertiary overflow-hidden rounded-lg duration-500 ease-in z-20">
+                                        <h4 class="text-dark text-xl font-medium">Empty list.</h4>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngFor="let card of list.cards; trackBy: trackByFn">
+                                    <a class="relative flex flex-col items-start mb-4 p-4 bg-tertiary dark:bg-tertiary border-accent overflow-hidden rounded-lg transform-gpu z-20" [routerLink]="['card', card.id]" routerLinkActive="active-link" cdkDrag (cdkDragStarted)="dragStart($event)" #myIdentifier>                                        
+                                        <div class="mb-4 rounded-xl bg-gradient-45 to-secondary z-10" [ngStyle]="{'min-height.px': height}" *cdkDragPlaceholder #dragPlaceholder></div>
+                                        <div class="flex flex-row w-full justify-between items-center z-20">
+                                            <div class="flex items-center">
+                                                <div class="h-4 w-4 text-accent cursor-pointer">
+                                                    <!-- <icons class="stroke-2 stroke-current" name="clock"></icons> -->
+                                                </div>
+                                                <span class="ml-2 text-dark text-sm font-medium">20.09.2022</span>
+                                            </div>
+                                            
+                                            <!-- <div class="h-6 w-6 text-dark fill-dark cursor-pointer">
+                                                <icons class="stroke-1 stroke-current" name="dots-vertical"></icons>
+                                            </div> -->
+                                        </div>
+                                        
+                                        <h4 class="text-light text-xl font-medium z-20">{{card.title}}</h4>
+
+                                        <ng-container *ngIf="card.description?.length">
+                                            <p class="my-2 pt-2 border-t border-borderline text-dark text-sm z-20">{{card.description}}</p>
+                                        </ng-container>
+                                        
+                                        <ng-container *ngIf="card.labels.length">
+                                            <div class="flex flex-wrap my-2 -mx-1 -mb-2 z-20">
+                                                <ng-container *ngFor="let label of card.labels; trackBy: trackByFn">
+                                                    <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium border border-dark text-dark">
+                                                        {{label.title}}
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="card.dueDate">
+                                            <div class="absolute bottom-0 right-0 w-20 h-20 -m-6 text-accent z-20">
+                                                <!-- <icons class="stroke-1 stroke-current" name="exclamation-circle"></icons> -->
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container>
+                                            <div class="absolute top-0 right-0 w-40 h-40 -m-6 text-secondary rotate-12 z-10">
+                                                <!-- <icons class="stroke-2 stroke-current" name="exclamation-circle"></icons> -->
+                                            </div>
+                                        </ng-container>
+                                        
+                                    </a>
+                                </ng-container>
+                            </div>
+                            <!-- <board-add-card (saved)="addCard(list, $event)" [buttonTitle]="list.cards.length ? 'Add another card' : 'Add a card'"></board-add-card> -->
+                        </div>
+                        <div class="h-full border-l border-borderline"></div>                        
+                    </ng-container>
+                </div>
+            </div>
+        </mat-drawer-content>
+        <!-- <mat-drawer class="w-full lg:w-96 bg-primary border-l border-borderline" [disableClose]="true" [mode]="'over'" [opened]="false" [position]="'end'" #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer> -->
+    </mat-drawer-container>
+</div>

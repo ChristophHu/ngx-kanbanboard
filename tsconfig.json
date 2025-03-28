@@ -10,6 +10,9 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "ngx-drawer": [
+        "./dist/ngx-drawer"
+      ],
       "ngx-kanbanboard": [
         "./dist/ngx-kanbanboard"
       ]
